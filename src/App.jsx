@@ -1,0 +1,66 @@
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { useAuth } from './context/AuthContext.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
+import RoleRoute from './components/RoleRoute.jsx'
+import RoleRedirect from './components/RoleRedirect.jsx'
+import Sidebar from './components/Sidebar.jsx'
+import AdminLayout from './components/AdminLayout.jsx'
+import CashierLayout from './components/CashierLayout.jsx'
+import { Loading } from './components/UI.jsx'
+import Landing from './pages/public/Landing.jsx'
+import Login from './pages/public/Login.jsx'
+import Register from './pages/public/Register.jsx'
+import ResetPassword from './pages/public/ResetPassword.jsx'
+import PortalLogin from './pages/admin/PortalLogin.jsx'
+import CashierDashboard from './pages/admin/Dashboard.jsx'
+import Billing from './pages/admin/Billing.jsx'
+import Collection from './pages/admin/Collection.jsx'
+import Customers from './pages/admin/Customers.jsx'
+import CashierBillPrint from './pages/admin/BillPrint.jsx'
+import Receipt from './pages/admin/Receipt.jsx'
+import AdminDashboard from './pages/admin/Monitoring.jsx'
+import CustomerDashboard from './pages/customer/Dashboard.jsx'
+import MyBills from './pages/customer/MyBills.jsx'
+import PaymentHistory from './pages/customer/PaymentHistory.jsx'
+import Profile from './pages/customer/Profile.jsx'
+import CustomerBillPrint from './pages/customer/BillPrint.jsx'
+
+export function GuestRoute({ children }) {
+  const { user, profile, loading, guestFlow } = useAuth()
+  if (loading && !guestFlow) return <Loading label="Loading…" />
+  if (user && profile && !guestFlow) return <Navigate replace to={profile.role === 'admin' ? '/admin' : profile.role === 'cashier' ? '/cashier' : '/customer/dashboard'} />
+  return children
+}
+
+export default function App() {
+  return <Routes>
+    <Route path="/" element={<Landing />} />
+    <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+    <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
+    <Route path="/reset-password" element={<ResetPassword />} />
+    <Route path="/portal" element={<GuestRoute><PortalLogin /></GuestRoute>} />
+    <Route path="/staff" element={<RoleRedirect />} />
+    <Route element={<ProtectedRoute allowedRoles={['admin']} />}><Route path="/admin" element={<AdminLayout />}>
+      <Route index element={<AdminDashboard />} />
+      <Route path="*" element={<Navigate replace to="/admin" />} />
+    </Route></Route>
+    <Route element={<ProtectedRoute allowedRoles={['cashier']} />}><Route path="/cashier" element={<CashierLayout />}>
+      <Route index element={<CashierDashboard />} />
+      <Route path="dashboard" element={<Navigate replace to="/cashier" />} />
+      <Route path="billing" element={<Billing />} />
+      <Route path="collection" element={<Collection />} />
+      <Route path="customers" element={<Customers />} />
+      <Route path="bills/:id/print" element={<CashierBillPrint />} />
+      <Route path="receipts/:id" element={<Receipt />} />
+    </Route></Route>
+    <Route element={<ProtectedRoute allowedRoles={['customer']} />}><Route element={<RoleRoute role="customer" />}><Route path="/customer" element={<Sidebar area="customer" />}>
+      <Route index element={<Navigate replace to="dashboard" />} />
+      <Route path="dashboard" element={<CustomerDashboard />} />
+      <Route path="bills" element={<MyBills />} />
+      <Route path="payments" element={<PaymentHistory />} />
+      <Route path="profile" element={<Profile />} />
+      <Route path="bills/:id/print" element={<CustomerBillPrint />} />
+    </Route></Route></Route>
+    <Route path="*" element={<RoleRedirect />} />
+  </Routes>
+}
