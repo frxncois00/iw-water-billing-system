@@ -73,7 +73,7 @@ export default function RequestDocuments({ applicationId, reference, token, clos
     saveDownload(data[0],item.label)
   }
   if(!staff && !items.length && !error) return null
-  return <section className="checklist"><h2>Requested documents</h2><Notice type="error">{error}</Notice>
+  return <section className="checklist request-checklist"><div className="checklist-heading"><h2>Requested documents</h2><p>Add and review documents required to process this request.</p></div><Notice type="error">{error}</Notice>
     {items.map(item=><div className="document-item" key={item.requirement_id}>
       <strong>{item.label}</strong><span>{item.state}</span>
       {!staff && !closed && ['requested','rejected'].includes(item.state) && <label>Upload PDF or image (2 MB max)<input disabled={busy} type="file" accept="application/pdf,image/png,image/jpeg" onChange={e=>{const file=e.target.files[0];if(file)action(()=>upload(item,file))}}/></label>}

@@ -7,12 +7,24 @@ import { peso } from '../lib/format.js'
 
 const cashierLinks = [
   { to: '/cashier', label: 'Dashboard', icon: BarChart3 },
+  { to: '/cashier/requests', label: 'Service Applications & Requests', icon: FileText },
+  { to: '/cashier/customers', label: 'Customers & Service Accounts', icon: Users },
   { to: '/cashier/billing', label: 'Billing', icon: FileText },
-  { to: '/cashier/collection', label: 'Collection', icon: Wallet },
-  { to: '/cashier/customers', label: 'Customers', icon: Users },
-  { to: '/cashier/requests', label: 'Customer requests', icon: FileText },
+  { to: '/cashier/collection', label: 'Collections', icon: Wallet },
 ]
-const adminLinks = [{ to: '/admin', label: 'Monitoring', icon: BarChart3 }]
+const adminLinks = [
+  { to: '/admin', label: 'Dashboard', icon: BarChart3 },
+  { to: '/admin/customers', label: 'Customers & Service Accounts', icon: Users },
+  { to: '/admin/billing', label: 'Billing Reports', icon: FileText },
+  { to: '/admin/collections', label: 'Collections', icon: Wallet },
+  { to: '/admin/adjustments', label: 'Adjustments & Corrections', icon: FileText },
+  { to: '/admin/delinquent', label: 'Delinquent Accounts', icon: CreditCard },
+  { to: '/admin/rates', label: 'Rates & Charges', icon: Settings2 },
+  { to: '/admin/service-requests', label: 'Service Applications & Requests', icon: FileText },
+  { to: '/admin/concerns', label: 'Concerns & Complaints', icon: FileText },
+  { to: '/admin/users-audit', label: 'Users and Audit Logs', icon: Users },
+  { to: '/admin/settings', label: 'Settings', icon: Settings2 },
+]
 const customerLinks = [
   { to: '/customer/dashboard', label: 'My Dashboard', icon: BarChart3 },
   { to: '/customer/bills', label: 'My Bills', icon: FileText },
@@ -35,17 +47,17 @@ export default function Sidebar({ area }) {
   }, [area])
   const links = area === 'admin' ? adminLinks : area === 'cashier' ? cashierLinks : customerLinks
   const logout = async () => { await signOut(); navigate(area === 'customer' ? '/login' : '/portal', { replace: true }) }
-  return <div className="app-shell">
+  return <div className={`app-shell ${area === 'customer' ? 'customer-shell' : 'staff-shell'}`}>
     <button className="mobile-menu button button-ghost" onClick={() => setOpen(!open)} aria-label={open ? 'Close navigation' : 'Open navigation'}>{open ? <X /> : <Menu />} <span>Menu</span></button>
     {open && <button className="sidebar-scrim" onClick={() => setOpen(false)} aria-label="Close navigation" />}
     <aside className={`sidebar ${open ? 'sidebar-open' : ''}`}>
       <div className="brand"><span className="brand-icon"><Droplets size={24} /></span><span><strong>ISABEL WATERS</strong><small>Billing & Collection</small></span></div>
       <div className="sidebar-divider" />
-      <p className="sidebar-caption">{area === 'admin' ? 'ADMIN MONITORING' : area === 'cashier' ? 'CASHIER WORKSPACE' : 'CUSTOMER PORTAL'}</p>
-      <nav aria-label="Main navigation">{links.map(({ to, label, icon: Icon }) => <NavLink key={to} to={to} onClick={() => setOpen(false)} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}><Icon size={19} strokeWidth={1.9} />{label}</NavLink>)}</nav>
+      <p className="sidebar-caption">{area === 'admin' ? 'ADMIN MONITORING' : area === 'cashier' ? 'CASHIER / STAFF WORKSPACE' : 'CUSTOMER PORTAL'}</p>
+      <nav aria-label="Main navigation">{links.map(({ to, label, icon: Icon }) => <NavLink end={to === '/cashier' || to === '/admin'} key={to} to={to} onClick={() => setOpen(false)} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}><Icon size={19} strokeWidth={1.9} />{label}</NavLink>)}</nav>
       <div className="sidebar-bottom">
         {area === 'cashier' && <div className="goal-box"><span className="goal-top">MONTHLY COLLECTION GOAL</span><strong>{goal === null ? 'Loading…' : peso(goal)}</strong><small>Keep the collection moving</small></div>}
-        <div className="sidebar-user"><span className="avatar">{profile?.full_name?.slice(0, 1).toUpperCase() || 'I'}</span><span><strong>{profile?.full_name || profile?.email || 'Isabel Waters'}</strong><small>{area === 'admin' ? 'Administrator' : area === 'cashier' ? 'Cashier' : 'Customer'}</small></span></div>
+        <div className="sidebar-user"><span className="avatar">{profile?.full_name?.slice(0, 1).toUpperCase() || 'I'}</span><span><strong>{profile?.full_name || profile?.email || 'Isabel Waters'}</strong><small>{area === 'admin' ? 'Administrator' : area === 'cashier' ? 'Cashier / Staff' : 'Customer'}</small></span></div>
         <button className="nav-item logout" onClick={logout}><LogOut size={19} strokeWidth={1.9} />Logout</button>
       </div>
     </aside>

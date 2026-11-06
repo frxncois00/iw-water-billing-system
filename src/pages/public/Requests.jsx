@@ -90,7 +90,7 @@ export function RequestForm({application=false,connectionChange=false}) {
         <><label id="topic-label">What is it about?</label><div className="chips" role="group" aria-labelledby="topic-label">{Object.keys(topics).map(label=><button type="button" className="chip" key={label} aria-pressed={topic===label} onClick={()=>setTopic(label)}>{label}</button>)}</div>
           {topic==='Other' && <label>Type<select name="otherType">{Object.entries(otherTypes).map(([id,label])=><option key={id} value={id}>{label}</option>)}</select></label>}
           <label>Location or nearest landmark<input name="location" maxLength="500"/></label></>}
-        <label>CAN {connectionChange?'':'(optional)'}<input required={connectionChange} name="can" maxLength="32" list="known-cans"/></label><datalist id="known-cans">{accounts.filter(a=>a.can).map(a=><option key={a.can}>{a.can}</option>)}</datalist>
+        <label>CAN {connectionChange?'':'(optional)'}<input required={connectionChange} name="can" inputMode="numeric" pattern="[0-9]{9}" minLength="9" maxLength="9" placeholder="583104927" list="known-cans"/></label><datalist id="known-cans">{accounts.filter(a=>a.can).map(a=><option key={a.can}>{a.can}</option>)}</datalist>
         <label>{connectionChange?'Reason or notes':'Details'}<textarea name="description" required={!connectionChange} maxLength="2700" rows="4"/></label>
         <label>Name (optional)<input name="name" maxLength="160" defaultValue={!staff?profile?.full_name:''}/></label><p className="hint">Leave contact details if you want a reply.</p>{contact}</>}
       <Notice type="error">{error}</Notice><div className="row">

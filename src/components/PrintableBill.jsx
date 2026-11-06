@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Printer, Droplets } from 'lucide-react'
+import { ArrowLeft, Download, Droplets } from 'lucide-react'
 import { getPrintableBill } from '../lib/api.js'
+import { downloadBillPdf } from '../lib/billPdf.js'
 import { billStatus, dateLabel, monthLabel, peso } from '../lib/format.js'
 import StatusBadge from './StatusBadge.jsx'
 import { Loading, Notice } from './UI.jsx'
@@ -10,7 +11,47 @@ export default function PrintableBill({ area }) {
   const { id } = useParams()
   const [bill, setBill] = useState(null)
   const [error, setError] = useState('')
-  useEffect(() => { let active = true; getPrintableBill(id).then((value) => { if (active) setBill(value) }).catch((err) => { if (active) setError(err.message || 'Bill unavailable.') }); return () => { active = false } }, [id])
-  const back = area === 'admin' || area === 'cashier' ? '/cashier/billing' : '/customer/bills'
-  return <div className="page-content print-page"><div className="print-toolbar"><Link to={back} className="button button-ghost"><ArrowLeft size={17} /> Back to bills</Link><button className="button" onClick={() => window.print()} disabled={!bill}><Printer size={17} /> Print bill</button></div><Notice type="error">{error}</Notice>{!bill && !error && <Loading label="Loading bill…" />}{bill && <article className="print-sheet"><header className="print-header"><div className="print-brand"><span><Droplets size={27} /></span><div><strong>ISABEL WATERS</strong><small>Billing & Collection</small></div></div><div><span>WATER INVOICE</span><strong>{bill.bill_no}</strong></div></header><div className="print-title"><div><p className="eyebrow">INVOICE</p><h1>{monthLabel(bill.billing_month)}</h1></div><StatusBadge bill={bill} /></div><div className="print-info"><div><span>BILLED TO</span><strong>{bill.customer.full_name}</strong><p>{bill.customer.address}</p><p>CAN {bill.customer.can || "Pending assignment"}</p><p>Meter no. {bill.customer.meter_no}</p></div><div><span>BILL DETAILS</span><dl><div><dt>Bill date</dt><dd>{dateLabel(bill.bill_date)}</dd></div><div><dt>Due date</dt><dd>{dateLabel(bill.due_date)}</dd></div><div><dt>Bill no.</dt><dd>{bill.bill_no}</dd></div></dl></div></div><div className="print-table"><div className="print-table-row header"><span>Water consumption</span><span>Reading / Rate</span><span>Amount</span></div><div className="print-table-row"><span><strong>Monthly water service</strong><small>{monthLabel(bill.billing_month)}</small></span><span><small>Previous: {Number(bill.previous_reading).toFixed(2)} m³</small><small>Current: {Number(bill.current_reading).toFixed(2)} m³</small><small>Used: {Number(bill.water_used).toFixed(2)} m³</small></span><strong>{bill.items?.length ? "" : peso(bill.amount)}</strong></div>{bill.items?.map((item) => <div className="print-table-row" key={item.id}><span>{item.description}</span><span>{item.quantity == null ? "" : `${Number(item.quantity).toFixed(2)} m³`}</span><strong>{peso(item.amount)}</strong></div>)}</div><div className="print-totals"><div><span>Water charge</span><strong>{peso(bill.water_charge ?? bill.amount)}</strong></div><div><span>Penalty</span><strong>{peso(bill.penalty_amount ?? 0)}</strong></div><div><span>Previous unpaid balance</span><strong>{peso(bill.previous_balance ?? 0)}</strong></div><div><span>Amount paid</span><strong>− {peso(bill.amount_paid)}</strong></div><div className="grand-total"><span>Total due at issue</span><strong>{peso(bill.total_amount ?? bill.amount)}</strong></div><div><span>Current bill balance</span><strong>{peso(bill.balance)}</strong></div></div><div className="print-foot"><p><strong>Payment status: {billStatus(bill)}</strong></p><p>Keep your invoice number when paying or asking about this bill.</p></div></article>}</div>
+  const [exporting, setExporting] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    getPrintableBill(id)
+      .then((value) => { if (active) setBill(value) })
+      .catch((err) => { if (active) setError(err.message || 'Bill unavailable.') })
+    return () => { active = false }
+  }, [id])
+
+  const back = area === 'admin' ? '/admin/billing' : area === 'cashier' ? '/cashier/billing' : '/customer/bills'
+
+  const exportPdf = async () => {
+    const sheet = document.querySelector('.print-sheet')
+    if (!bill || !sheet || exporting) return
+    setExporting(true)
+    setError('')
+    try {
+      downloadBillPdf(bill)
+    } catch (err) {
+      setError(err.message || 'Could not export this bill. Please try again.')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  return <div className="page-content print-page">
+    <div className="print-toolbar">
+      <div><Link to={back} className="button button-ghost"><ArrowLeft size={17} /> Back to bills</Link><p className="print-toolbar-hint">Download this monthly statement as an A4 PDF.</p></div>
+      <button className="button" onClick={exportPdf} disabled={!bill || exporting} aria-busy={exporting}><Download size={17} /> {exporting ? 'Preparing PDF…' : 'Download PDF'}</button>
+    </div>
+    <Notice type="error">{error}</Notice>
+    {!bill && !error && <Loading label="Loading bill…" />}
+    {bill && ['Office Copy', 'Customer Copy'].map(copy => <article key={copy} className="print-sheet bill-print-copy">
+      <p className="bill-copy-label">{copy}</p>
+      <header className="print-header"><div className="print-brand"><span><Droplets size={27} /></span><div><strong>ISABEL WATERS</strong><small>Billing & Collection</small></div></div><div><span>MONTHLY WATER BILL</span><strong>{bill.bill_no}</strong></div></header>
+      <div className="print-title"><div><p className="eyebrow">STATEMENT PERIOD</p><h1>{monthLabel(bill.billing_month)}</h1></div><StatusBadge bill={bill} /></div>
+      <div className="print-info"><div><span>BILLED TO</span><strong>{bill.customer.full_name}</strong><p>{bill.customer.address}</p><p>CAN {bill.customer.can || 'Pending assignment'}</p><p>Meter no. {bill.customer.meter_no}</p></div><div><span>BILL DETAILS</span><dl><div><dt>Bill date</dt><dd>{dateLabel(bill.bill_date)}</dd></div><div><dt>Due date</dt><dd>{dateLabel(bill.due_date)}</dd></div><div><dt>Bill no.</dt><dd>{bill.bill_no}</dd></div></dl></div></div>
+      <div className="print-table"><div className="print-table-row header"><span>Water consumption</span><span>Reading / Rate</span><span>Amount</span></div><div className="print-table-row"><span><strong>Monthly water service</strong><small>{monthLabel(bill.billing_month)}</small></span><span><small>Previous: {Number(bill.previous_reading).toFixed(2)} m³</small><small>Current: {Number(bill.current_reading).toFixed(2)} m³</small><small>Used: {Number(bill.water_used).toFixed(2)} m³</small></span><strong>{bill.items?.length ? '' : peso(bill.amount)}</strong></div>{bill.items?.map((item) => <div className="print-table-row" key={item.id}><span>{item.description}</span><span>{item.quantity == null ? '' : `${Number(item.quantity).toFixed(2)} m³`}</span><strong>{peso(item.amount)}</strong></div>)}</div>
+      <div className="print-totals"><div><span>Water charge</span><strong>{peso(bill.water_charge ?? bill.amount)}</strong></div><div><span>Penalty</span><strong>{peso(bill.penalty_amount ?? 0)}</strong></div><div><span>Previous unpaid balance</span><strong>{peso(bill.previous_balance ?? 0)}</strong></div><div><span>Amount paid</span><strong>- {peso(bill.amount_paid)}</strong></div><div className="grand-total"><span>Total due at issue</span><strong>{peso(bill.total_amount ?? bill.amount)}</strong></div><div><span>Current bill balance</span><strong>{peso(bill.balance)}</strong></div></div>
+      <div className="print-foot"><p><strong>Payment status: {billStatus(bill)}</strong></p><p>Keep your invoice number when paying or asking about this bill.</p></div>
+    </article>)}
+  </div>
 }

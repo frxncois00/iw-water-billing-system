@@ -8,7 +8,7 @@ import StatusBadge from '../../components/StatusBadge.jsx'
 
 const csvCell = (value) => `"${String(value ?? '').replace(/^[\s]*[=+\-@]/, "'$&").replaceAll('"', '""')}"`
 function exportCsv(rows) {
-  const columns = ['Date', 'Bill no.', 'Customer', 'Cashier', 'Amount', 'Method', 'Reference', 'Bill status']
+  const columns = ['Date', 'Bill no.', 'Customer', 'Cashier / Staff', 'Amount', 'Method', 'Reference', 'Bill status']
   const content = [columns, ...rows.map(({ payment, bill, customer, cashier }) => [payment.paid_at, bill?.bill_no, customer?.full_name, cashier?.full_name || cashier?.email, payment.amount, payment.method, payment.reference_no, bill ? billStatus(bill) : ''])]
     .map((row) => row.map(csvCell).join(',')).join('\r\n')
   const link = document.createElement('a')
@@ -53,7 +53,7 @@ export default function Monitoring() {
     return { cashiers, payments, billed, collected, outstanding, totals, chart, overdue, statuses }
   }, [data, from, to, cashierId, status, period])
 
-  return <div className="page-content admin-monitor"><PageHeader eyebrow="ADMIN MONITORING" title="Collection overview" description="Billing, payments, and cashier activity across all accounts." />
+  return <div className="page-content admin-monitor"><PageHeader eyebrow="ADMIN MONITORING" title="Collection overview" description="Billing, payments, and Cashier / Staff activity across all accounts." />
     <Notice type="error">{error}</Notice>{error && <button className="button button-ghost" onClick={refresh}>Retry</button>}
     {loading && !data ? <Loading /> : view && <>
       <div className="stats-grid"><StatCard label="Total billed" value={peso(view.billed)} detail="All bills" /><StatCard label="Total collected" value={peso(view.collected)} detail="All payments" tone="green" /><StatCard label="Outstanding" value={peso(view.outstanding)} detail="Remaining balance" tone="orange" /><StatCard label="Collection rate" value={`${view.billed ? (view.collected / view.billed * 100).toFixed(1) : '0.0'}%`} detail="Collected ÷ billed" tone="purple" /></div>

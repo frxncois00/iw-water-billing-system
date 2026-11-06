@@ -3,7 +3,7 @@ import RequestDocuments, { CaseAttachment } from '../../components/RequestDocume
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabaseClient.js'
-import { Loading, Notice } from '../../components/UI.jsx'
+import { Loading, Notice, PageHeader } from '../../components/UI.jsx'
 import { dateLabel,errorMessage } from '../../lib/format.js'
 
 const queues = {
@@ -11,10 +11,11 @@ const queues = {
   service_cases: { title:'Concerns', columns:'description,category,location_text,claimed_can,reporter_name,resolution_summary', states:['received','triage','assigned','investigating','waiting','resolved','closed','rejected'] },
 }
 
-export default function Requests() {
-  const [queue,setQueue] = useState('service_applications')
-  return <div className="page-content"><h1>Customer requests</h1><div className="billing-toolbar"><nav aria-label="Request queues">
-    {Object.entries(queues).map(([key,q])=><button key={key} className="button button-ghost" aria-pressed={key===queue} onClick={()=>setQueue(key)}>{q.title}</button>)}</nav>
+export default function Requests({ initialQueue = 'service_applications', lockedQueue = false }) {
+  const [queue,setQueue] = useState(initialQueue)
+  const pageTitle = queue === 'service_cases' ? 'Concerns & complaints' : 'Service applications & requests'
+  return <div className="page-content request-management"><PageHeader eyebrow="CUSTOMER SERVICE" title={pageTitle} description="Review request details, update progress, and manage customer requirements." /><div className="billing-toolbar request-toolbar"><nav aria-label="Request queues">
+    {!lockedQueue && Object.entries(queues).map(([key,q])=><button key={key} className="button button-ghost" aria-pressed={key===queue} onClick={()=>setQueue(key)}>{q.title}</button>)}</nav>
     <Link className="button" to={queue==='service_cases' ? '/concerns' : '/apply'}>Record request</Link></div>
     <RequestQueue key={queue} queue={queue}/></div>
 }
@@ -29,6 +30,11 @@ function RequestQueue({queue}) {
     setRows(null); setError('')
     supabase.from(queue).select('id,reference_no,channel,status,customer_message,contact_no,contact_email,updated_at,' + queues[queue].columns)
       .order('created_at',{ascending:false}).order('id').range(page*25,page*25+24).then(({data,error})=>{
+        if(error?.code === '42703') {
+          return supabase.from(queue).select('id,reference_no,channel,status,contact_no,contact_email,updated_at,' + queues[queue].columns)
+            .order('created_at',{ascending:false}).order('id').range(page*25,page*25+24)
+            .then(({data:legacyData,error:legacyError})=>{ if(active) { if(legacyError)setError(errorMessage(legacyError)); else setRows(legacyData.map(row=>({...row,customer_message:null})))} })
+        }
         if(active) { if(error)setError(errorMessage(error)); else setRows(data) }
       })
     return ()=>{active=false}
@@ -60,13 +66,13 @@ function RequestRow({row,queue,saved}) {
     } catch(err) { setError(errorMessage(err)) }
     finally { setBusy(false) }
   }
-  return <details className="queue-row"><summary><strong>{row.reference_no}</strong> · {row.status.replaceAll('_',' ')} · {dateLabel(row.updated_at)}</summary>
-    <p>{[row.applicant_name || row.reporter_name,row.service_address || row.location_text,row.claimed_can].filter(Boolean).join(' · ')}</p>
-    {row.notes && <p>{row.notes}</p>}
-    <p>{[row.channel,row.contact_no,row.contact_email].filter(Boolean).join(' · ')}</p>
-    {row.description && <p>{row.category} · {row.description}</p>}
-    <form onSubmit={update} className="form-stack"><label>Status<select name="status" disabled={row.status==='activated'} defaultValue={row.status}>{queues[queue].states.filter(s=>s!=='activated' || ['installation','activated'].includes(row.status)).map(state=><option value={state} key={state}>{state.replaceAll('_',' ')}</option>)}</select></label>
-      {queue==='service_applications' && row.status==='installation' && <fieldset><legend>Completed installation</legend><label>Issued CAN<input name="can"/></label><label>Installed meter<input name="meter"/></label><label>Initial reading (m³)<input name="reading" type="number" min="0" step="0.01"/></label></fieldset>}
+  return <details className="queue-row"><summary><strong>{row.reference_no}</strong><span>{row.status.replaceAll('_',' ')}</span><time>{dateLabel(row.updated_at)}</time></summary>
+    <div className="request-meta"><p><strong>Customer</strong>{[row.applicant_name || row.reporter_name,row.service_address || row.location_text,row.claimed_can].filter(Boolean).join(' · ')}</p>
+    {row.notes && <p><strong>Request type</strong>{row.notes}</p>}
+    <p><strong>Contact</strong>{[row.channel,row.contact_no,row.contact_email].filter(Boolean).join(' · ')}</p>
+    {row.description && <p><strong>Details</strong>{row.category} · {row.description}</p>}</div>
+    <form onSubmit={update} className="form-stack request-update-form"><label>Status<select name="status" disabled={row.status==='activated'} defaultValue={row.status}>{queues[queue].states.filter(s=>s!=='activated' || ['installation','activated'].includes(row.status)).map(state=><option value={state} key={state}>{state.replaceAll('_',' ')}</option>)}</select></label>
+      {queue==='service_applications' && row.status==='installation' && <fieldset><legend>Completed installation</legend><label>Issued CAN<input name="can" inputMode="numeric" pattern="[0-9]{9}" minLength="9" maxLength="9" placeholder="583104927"/></label><label>Installed meter<input name="meter"/></label><label>Initial reading (m³)<input name="reading" type="number" min="0" step="0.01"/></label></fieldset>}
       <label>Update for customer<textarea name="message" maxLength="1500" defaultValue={row.customer_message}/></label>
       {queue==='service_cases' && <label>Resolution notes<textarea name="notes" defaultValue={row.resolution_summary}/></label>}
       <Notice type="error">{error}</Notice><button className="button" disabled={busy}>{busy?'Saving…':'Save update'}</button></form>

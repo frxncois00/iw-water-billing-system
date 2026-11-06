@@ -22,7 +22,7 @@ export default function Accounts() {
   }
   return <section className="service-form"><h1>Billing accounts</h1>
     <form className="form-stack" onSubmit={e=>{e.preventDefault();change(null)}}>
-      <label>Contract account number (CAN)<input required maxLength="32" value={can} onChange={e=>setCan(e.target.value)} /></label>
+      <label>Contract account number (CAN)<input required inputMode="numeric" pattern="[0-9]{9}" minLength="9" maxLength="9" placeholder="583104927" value={can} onChange={e=>setCan(e.target.value.replace(/\D/g,'').slice(0,9))} /></label>
       <button className="button" disabled={busy}>Link account</button></form>
     <Notice type="error">{error}</Notice><Notice type="success">{notice}</Notice>
     {accounts.map(a=><div className="account-line" key={a.id}><div><strong>{a.can || 'CAN pending'}</strong><p>{a.service_address}</p></div>

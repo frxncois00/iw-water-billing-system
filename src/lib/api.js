@@ -25,19 +25,36 @@ export async function getCurrentRate() {
 }
 
 export async function getAdminData() {
-  const [customerRows, profiles, billRows, paymentRows, goalResult, accounts] = await Promise.all([
+  const accountColumns = 'id,can,legacy_customer_id,account_name,installation_reading'
+  const accountResult = await supabase.from('contract_accounts').select(accountColumns)
+  const loadedAccounts = accountResult.error?.code === '42703'
+    ? unwrap(await supabase.from('contract_accounts').select('id,can,legacy_customer_id,account_name'))
+    : unwrap(accountResult)
+  const [customerRows, profiles, billRows, paymentRows, goalResult, accounts, contacts, applications] = await Promise.all([
     fetchAll('customers'),
     fetchAll('profiles', 'id,full_name,role'),
     fetchAll('bills'),
     fetchAll('payments'),
     supabase.from('settings').select('value').eq('key', 'monthly_collection_goal').maybeSingle(),
-    fetchAll('contract_accounts','id,can,legacy_customer_id,account_name,installation_reading'),
+    Promise.resolve(loadedAccounts),
+    supabase.from('account_contacts').select('account_id,phone,email').then(unwrap),
+    fetchAll('service_applications', 'linked_account_id,contact_no,contact_email,notes,status'),
   ])
   const profileMap = new Map(profiles.map((profile) => [profile.id, profile]))
+  const migrationResult = await supabase.from('customer_migrations').select('*')
+  const migrated = new Map((migrationResult.data || []).map(row => [row.customer_id,row]))
   const accountsByCustomer = new Map(accounts.map(a=>[a.legacy_customer_id,a]))
+  const contactsByAccount = new Map(contacts.map(contact=>[contact.account_id,contact]))
+  const applicationsByAccount = new Map(applications.filter(application=>application.linked_account_id).map(application=>[application.linked_account_id,application]))
   const customers = customerRows
     .filter((customer) => !profileMap.has(customer.id) || profileMap.get(customer.id).role === 'customer')
-    .map((customer) => ({ ...customer, full_name: accountsByCustomer.get(customer.id)?.account_name || profileMap.get(customer.id)?.full_name || 'Unnamed customer', initial_reading: accountsByCustomer.get(customer.id)?.installation_reading }))
+    .map((customer) => {
+      const account = accountsByCustomer.get(customer.id)
+      const contact = contactsByAccount.get(account?.id)
+      const application = applicationsByAccount.get(account?.id)
+      const migration = migrated.get(customer.id)
+      return { ...customer, account_id: account?.id || null, can: account?.can || null, full_name: account?.account_name || profileMap.get(customer.id)?.full_name || 'Unnamed customer', initial_reading: account?.installation_reading, mobile_no: contact?.phone || application?.contact_no || customer.contact_no || null, email: contact?.email || application?.contact_email || null, property_type: migration?.property_type || application?.notes || null }
+    })
     .sort((a, b) => b.created_at.localeCompare(a.created_at))
   const customerMap = new Map(customers.map((customer) => [customer.id, customer]))
   const bills = billRows.map((bill) => ({ ...bill, customer: customerMap.get(bill.customer_id) || null }))
