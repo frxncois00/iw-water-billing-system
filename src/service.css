@@ -1,0 +1,32 @@
+.service-site{--ink:#192f48;--muted:#546779;--blue:#203e5b;--blue-dark:#132e49;--line:#d6e0e8;color:var(--ink);background:#f5f8fa;min-height:100dvh}
+.service-header{background:#fcfdfe;border-bottom:1px solid var(--line)}
+.service-bar,.service-main{width:min(1080px,calc(100% - 40px));margin:auto}
+.service-bar,.service-bar nav,.billing-toolbar,.billing-toolbar nav,.account-line,.balance-panel{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.service-bar,.billing-toolbar,.account-line,.balance-panel{justify-content:space-between}
+.service-bar{padding:12px 0}.service-brand{display:flex;align-items:center;gap:9px;font-weight:750;color:#19344f;font-size:20px;text-decoration:none}
+.service-bar nav a,.billing-toolbar nav a,.billing-toolbar button{min-height:44px;display:inline-flex;align-items:center;font-weight:600;color:#41576a;text-decoration:none}
+.service-bar nav .active,.billing-toolbar nav .active{color:#163752;box-shadow:inset 0 -2px #163752}
+.service-bar nav .service-login{background:#193752;color:white;border-radius:8px;padding:0 18px}
+.service-main{padding:clamp(20px,4vw,48px) 0 64px}
+.service-main h1{font-size:clamp(28px,4vw,40px);letter-spacing:-.045em;margin:0 0 24px}
+.service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.service-tile,.service-form,.balance-panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:clamp(20px,3vw,32px)}
+.service-tile{display:grid;grid-template-columns:26px 1fr 18px;gap:16px;align-items:center;text-decoration:none;color:var(--ink)}
+.service-tile:hover{background:#edf3f7}.service-tile h2,.service-form h2{font-size:20px;margin:0}.service-main p{line-height:1.55}.service-tile p,.account-line p{margin:4px 0 0;color:var(--muted)}
+.service-form{max-width:680px}.service-form form{margin:16px 0 0}.service-form label,.account-picker{font-size:15px;font-weight:600;color:var(--ink)}
+.service-form :is(input,textarea,select),.account-picker select{font:inherit;width:100%;border:1px solid #afbfce;background:#fff;border-radius:8px;padding:10px 12px;min-height:44px}
+.service-form textarea{resize:vertical}.contact-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.service-site :focus-visible{outline:3px solid #3e728e;outline-offset:3px}
+.service-site .button{background:#1b3954;color:#fff;border-color:transparent;min-height:44px}
+.office-contact{margin-top:32px;border-top:1px solid var(--line);padding:20px 0;display:grid;gap:6px;color:var(--muted)}
+.billing-toolbar{margin-bottom:24px;border-bottom:1px solid var(--line)}.billing-toolbar nav{gap:18px}
+.account-picker{display:grid;gap:6px;margin-bottom:24px;max-width:420px}
+.service-main .page-content{max-width:none;padding:0}
+.account-line{padding:14px 0;border-top:1px solid var(--line);margin-top:14px}
+.balance-panel{background:#eaf1f6;margin-bottom:16px}.balance-panel h2{font-size:36px;margin:0}.balance-panel p{margin:4px 0}
+.reference{display:grid;gap:6px;overflow-wrap:anywhere}.reference dt{color:var(--muted)}.reference dd{margin:0 0 10px;font-weight:600}.tracking-result{background:#edf4ef;padding:16px;margin-top:16px;border-radius:8px;text-transform:capitalize}
+@media(max-width:660px){.service-grid,.contact-pair{grid-template-columns:1fr}.service-bar{gap:4px}.service-bar nav,.billing-toolbar nav{gap:12px}.service-bar nav a,.billing-toolbar nav a{font-size:14px}.service-main,.service-bar{width:calc(100% - 28px)}.service-tile{gap:10px}}
+@media print{.service-header,.billing-toolbar,.account-picker{display:none}.service-main{padding:0;width:100%}.service-site{background:white;min-height:0}}
+.queue-row{background:#fff;border:1px solid var(--line);border-radius:10px;margin:12px 0;padding:16px}.queue-row summary{cursor:pointer;min-height:44px}.queue-row form{max-width:620px}
+.checklist{margin-top:22px}.document-item{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.document-item label{width:100%}.document-item span{text-transform:capitalize}.document-item button{border:1px solid var(--line);border-radius:6px;background:white;padding:8px 12px;min-height:44px}
+@media(prefers-reduced-motion:reduce){.service-site *{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}

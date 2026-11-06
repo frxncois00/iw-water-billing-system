@@ -1,0 +1,50 @@
+.service-site:has(.iw-landing) { color-scheme: light; background: #f5f8f8; --ink: #17374a; --muted: #49636e; --line: #d3e1e3; }
+.service-site:has(.iw-landing) .service-header { position: sticky; top: 0; z-index: 3; }
+.iw-landing { display: grid; gap: clamp(32px, 5vw, 58px); }
+.iw-landing h2 { margin: 0 0 18px; font-size: clamp(23px, 3vw, 30px); line-height: 1.2; letter-spacing: -.035em; }
+.iw-landing p { margin: 0; color: var(--muted); }
+.iw-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(20px,4vw,48px); align-items: center; padding: clamp(24px, 4vw, 48px); border-radius: 18px; background: repeating-radial-gradient(ellipse at 100% 128%, transparent 0 44px, #c7dcde 45px, transparent 47px 91px), linear-gradient(120deg,#f2f7f8,#e1eff0); border: 1px solid var(--line); }
+.iw-bill-card { background: #fff; padding: clamp(22px,3vw,34px); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 12px 32px #153e4a0c; }
+.iw-bill-card > svg { color: #24717a; margin-bottom: 12px; }
+.iw-bill-card h2 { margin-bottom: 8px; }
+.iw-kicker { font-size: 13px; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; color: #41675f; }
+.iw-hero h1 { margin: 12px 0 16px; font-size: clamp(38px, 5vw, 64px); line-height: 1.04; }
+.iw-hero p { max-width: 40ch; }
+.iw-hero-links, .iw-footer nav { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.iw-hero-links { margin-top: 24px; }
+.iw-hero-links > a:not(.button), .iw-footer nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-weight: 600; }
+.iw-actions { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.iw-actions a { display: flex; flex-direction: column; align-items: start; gap: 10px; padding: 22px; border-radius: 12px; background: white; border: 1px solid var(--line); color: var(--ink); }
+.iw-actions a:first-child { background: #eaf3f3; }
+.iw-actions a > svg:last-child { margin-top: auto; color: #256770; }
+.iw-connection { background: #fff; border-block: 1px solid var(--line); padding: clamp(24px,4vw,38px); }
+.iw-connection ol { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); list-style:none; padding:0; gap:24px; counter-reset:stages; }
+.iw-connection li { counter-increment:stages; border-top:3px solid #76acaa; padding-top:14px; }
+.iw-connection li::before { content:counter(stages,decimal-leading-zero); color:#356f73; font-weight:700; }
+.iw-connection h3 { margin:6px 0; font-size:18px; }
+.iw-landing [id] { scroll-margin-top: 100px; }
+.iw-actions a:hover { background: #edf3f6; border-color: #aabecb; }
+.iw-actions a > svg:first-child { box-sizing: content-box; background: #edf3f5; border-radius: 9px; padding: 9px; }
+.iw-actions h3 { margin: 0; font-size: 17px; }
+.iw-actions p { margin-top: 3px; font-size: 14px; }
+.iw-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(16px, 5vw, 58px); border-top: 1px solid var(--line); padding-top: 32px; }
+.iw-split h2 { margin: 0; }
+.iw-split > p { max-width: 66ch; }
+.iw-faqs details { border-bottom: 1px solid var(--line); }
+.iw-faqs summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; min-height: 48px; font-weight: 650; cursor: pointer; list-style: none; }
+.iw-faqs summary::-webkit-details-marker { display: none; }
+.iw-faqs details[open] svg { transform: rotate(180deg); }
+.iw-faqs p { padding: 0 24px 16px 0; }
+.iw-contact { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding: clamp(24px, 4vw, 40px); border-radius: 14px; background: #e7f0ed; }
+.iw-contact h2 { margin-bottom: 8px; }
+.iw-contact address { display: grid; gap: 4px; margin-top: 16px; font-style: normal; overflow-wrap: anywhere; }
+.iw-contact address > * { display: flex; align-items: center; gap: 8px; color: var(--ink); min-height: 36px; }
+.iw-footer { background: #fcfdfe; border-top: 1px solid var(--line); }
+.iw-footer > div { width: min(1080px, calc(100% - 40px)); margin: auto; padding: 20px 0; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 12px; }
+@media(max-width:860px) {
+  .iw-actions { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:660px) {
+  .iw-hero, .iw-split, .iw-actions, .iw-connection ol { grid-template-columns: 1fr; }
+  .iw-actions a { padding: 16px; }
+}

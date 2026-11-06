@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="only light"><title>Isabel Waters | Customer Services</title><style>
+.service-site:has(.iw-landing) { color-scheme: light; background: rgb(245, 248, 248); --ink: #17374a; --muted: #49636e; --line: #d3e1e3; }
+.service-site:has(.iw-landing) .service-header { position: sticky; top: 0px; z-index: 3; }
+.iw-landing { display: grid; gap: clamp(32px, 5vw, 58px); }
+.iw-landing h2 { margin: 0px 0px 18px; font-size: clamp(23px, 3vw, 30px); line-height: 1.2; letter-spacing: -0.035em; }
+.iw-landing p { margin: 0px; color: var(--muted); }
+.iw-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(20px, 4vw, 48px); align-items: center; padding: clamp(24px, 4vw, 48px); border-radius: 18px; background: repeating-radial-gradient(at 100% 128%, transparent 0px, transparent 44px, rgb(199, 220, 222) 45px, transparent 47px, transparent 91px), linear-gradient(120deg, rgb(242, 247, 248), rgb(225, 239, 240)); border: 1px solid var(--line); }
+.iw-bill-card { background: rgb(255, 255, 255); padding: clamp(22px, 3vw, 34px); border: 1px solid var(--line); border-radius: 16px; box-shadow: rgba(21, 62, 74, 0.047) 0px 12px 32px; }
+.iw-bill-card > svg { color: rgb(36, 113, 122); margin-bottom: 12px; }
+.iw-bill-card h2 { margin-bottom: 8px; }
+.iw-kicker { font-size: 13px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; color: rgb(65, 103, 95); }
+.iw-hero h1 { margin: 12px 0px 16px; font-size: clamp(38px, 5vw, 64px); line-height: 1.04; }
+.iw-hero p { max-width: 40ch; }
+.iw-hero-links, .iw-footer nav { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.iw-hero-links { margin-top: 24px; }
+.iw-hero-links > a:not(.button), .iw-footer nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); font-weight: 600; }
+.iw-actions { display: grid; grid-template-columns: repeat(4, minmax(0px, 1fr)); gap: 14px; }
+.iw-actions a { display: flex; flex-direction: column; align-items: start; gap: 10px; padding: 22px; border-radius: 12px; background: white; border: 1px solid var(--line); color: var(--ink); }
+.iw-actions a:first-child { background: rgb(234, 243, 243); }
+.iw-actions a > svg:last-child { margin-top: auto; color: rgb(37, 103, 112); }
+.iw-connection { background: rgb(255, 255, 255); border-block: 1px solid var(--line); padding: clamp(24px, 4vw, 38px); }
+.iw-connection ol { display: grid; grid-template-columns: repeat(3, minmax(0px, 1fr)); list-style: none; padding: 0px; gap: 24px; counter-reset: stages 0; }
+.iw-connection li { counter-increment: stages 1; border-top: 3px solid rgb(118, 172, 170); padding-top: 14px; }
+.iw-connection li::before { content: counter(stages, decimal-leading-zero); color: rgb(53, 111, 115); font-weight: 700; }
+.iw-connection h3 { margin: 6px 0px; font-size: 18px; }
+.iw-landing [id] { scroll-margin-top: 100px; }
+.iw-actions a:hover { background: rgb(237, 243, 246); border-color: rgb(170, 190, 203); }
+.iw-actions a > svg:first-child { box-sizing: content-box; background: rgb(237, 243, 245); border-radius: 9px; padding: 9px; }
+.iw-actions h3 { margin: 0px; font-size: 17px; }
+.iw-actions p { margin-top: 3px; font-size: 14px; }
+.iw-split { display: grid; grid-template-columns: minmax(0px, 1fr) minmax(0px, 2fr); gap: clamp(16px, 5vw, 58px); border-top: 1px solid var(--line); padding-top: 32px; }
+.iw-split h2 { margin: 0px; }
+.iw-split > p { max-width: 66ch; }
+.iw-faqs details { border-bottom: 1px solid var(--line); }
+.iw-faqs summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0px; min-height: 48px; font-weight: 650; cursor: pointer; list-style: none; }
+.iw-faqs summary::-webkit-details-marker { display: none; }
+.iw-faqs details[open] svg { transform: rotate(180deg); }
+.iw-faqs p { padding: 0px 24px 16px 0px; }
+.iw-contact { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding: clamp(24px, 4vw, 40px); border-radius: 14px; background: rgb(231, 240, 237); }
+.iw-contact h2 { margin-bottom: 8px; }
+.iw-footer { background: rgb(252, 253, 254); border-top: 1px solid var(--line); }
+.iw-footer > div { width: min(1080px, 100% - 40px); margin: auto; padding: 20px 0px; display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center; gap: 12px; }
+@media (max-width: 860px) {
+.iw-actions { grid-template-columns: repeat(2, minmax(0px, 1fr)); }
+}
+@media (max-width: 660px) {
+.iw-hero, .iw-split, .iw-actions, .iw-connection ol { grid-template-columns: 1fr; }
+.iw-actions a { padding: 16px; }
+}
+:root { font-family: "DM Sans", Arial, sans-serif; color: rgb(24, 49, 77); background: rgb(244, 247, 251); font-synthesis: none; text-rendering: optimizelegibility; -webkit-font-smoothing: antialiased; --navy: #102b4d; --navy-deep: #0a213d; --blue: #176eb5; --blue-dark: #115b9a; --cyan: #49c9dc; --ink: #18314d; --muted: #667b91; --line: #e3eaf1; --surface: #fff; --bg: #f4f7fb; --green: #14785a; --orange: #b96417; --danger: #b53846; --shadow: 0 12px 34px rgba(22,51,79,.045); }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0px; min-width: 320px; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, p { margin-top: 0px; }
+h1, h2, h3, strong { font-family: Manrope, "DM Sans", sans-serif; }
+h1, h2, h3 { letter-spacing: -0.035em; }
+p { line-height: 1.6; }
+svg { flex: 0 0 auto; }
+.button { min-height: 44px; padding: 10px 18px; border: 1px solid var(--blue); border-radius: 10px; background: var(--blue); color: rgb(255, 255, 255); display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-weight: 700; line-height: 1.25; white-space: nowrap; transition: background 0.2s, border-color 0.2s, box-shadow 0.2s; }
+.button:hover:not(:disabled) { background: var(--blue-dark); border-color: var(--blue-dark); box-shadow: rgba(23, 110, 181, 0.16) 0px 8px 18px; }
+@media print {
+body { background: rgb(255, 255, 255); }
+}
+.service-site { --ink: #192f48; --muted: #546779; --blue: #203e5b; --blue-dark: #132e49; --line: #d6e0e8; color: var(--ink); background: rgb(245, 248, 250); min-height: 100dvh; }
+.service-header { background: rgb(252, 253, 254); border-bottom: 1px solid var(--line); }
+.service-bar, .service-main { width: min(1080px, 100% - 40px); margin: auto; }
+.service-bar, .service-bar nav, .billing-toolbar, .billing-toolbar nav, .account-line, .balance-panel { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.service-bar, .billing-toolbar, .account-line, .balance-panel { justify-content: space-between; }
+.service-bar { padding: 12px 0px; }
+.service-brand { display: flex; align-items: center; gap: 9px; font-weight: 750; color: rgb(25, 52, 79); font-size: 20px; text-decoration: none; }
+.service-bar nav a, .billing-toolbar nav a, .billing-toolbar button { min-height: 44px; display: inline-flex; align-items: center; font-weight: 600; color: rgb(65, 87, 106); text-decoration: none; }
+.service-bar nav .service-login { background: rgb(25, 55, 82); color: white; border-radius: 8px; padding: 0px 18px; }
+.service-main { padding: clamp(20px, 4vw, 48px) 0px 64px; }
+.service-main h1 { font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.045em; margin: 0px 0px 24px; }
+.service-main p { line-height: 1.55; }
+.service-site :focus-visible { outline: rgb(62, 114, 142) solid 3px; outline-offset: 3px; }
+.service-site .button { background: rgb(27, 57, 84); color: rgb(255, 255, 255); border-color: transparent; min-height: 44px; }
+@media (max-width: 660px) {
+.service-bar { gap: 4px; }
+.service-bar nav, .billing-toolbar nav { gap: 12px; }
+.service-bar nav a, .billing-toolbar nav a { font-size: 14px; }
+.service-main, .service-bar { width: calc(100% - 28px); }
+}
+@media print {
+.service-header, .billing-toolbar, .account-picker { display: none; }
+.service-main { padding: 0px; width: 100%; }
+.service-site { background: white; min-height: 0px; }
+}
+@media (prefers-reduced-motion: reduce) {
+.service-site * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style></head><body>
+<div class="service-site" id="top">
+<header class="service-header">
+<div class="service-bar">
+<a class="service-brand" href="#top">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-droplet">
+<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z">
+</path>
+</svg> Isabel Waters</a>
+<nav aria-label="Customer services">
+<a class="" href="http://localhost:5173/apply">New service</a>
+<a class="" href="http://localhost:5173/concerns">Concerns</a>
+<a class="" href="http://localhost:5173/track">Track request</a>
+<a class="service-login" href="http://localhost:5173/login">Log in</a>
+</nav>
+</div>
+</header>
+<main class="service-main">
+<div class="iw-landing">
+<section class="iw-hero" aria-labelledby="hero-heading">
+<div>
+<span class="iw-kicker">Isabel Waters · Customer portal</span>
+<h1 id="hero-heading">Pay your bill.<br>Get connected.<br>Report a leak.</h1>
+<p>Manage your water account or reach the service office from one place.</p>
+</div>
+<aside class="iw-bill-card">
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text" aria-hidden="true">
+<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z">
+</path>
+<path d="M14 2v4a2 2 0 0 0 2 2h4">
+</path>
+<path d="M10 9H8">
+</path>
+<path d="M16 13H8">
+</path>
+<path d="M16 17H8">
+</path>
+</svg>
+<h2>Check a bill</h2>
+<p>Use your Contract Account Number (CAN) to view invoices and payments in your portal.</p>
+<div class="iw-hero-links">
+<a class="button" href="http://localhost:5173/login">Log in to my account <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right">
+<path d="M5 12h14">
+</path>
+<path d="m12 5 7 7-7 7">
+</path>
+</svg>
+</a>
+<a href="http://localhost:5173/register">Create a login</a>
+</div>
+</aside>
+</section>
+<section aria-labelledby="quick-heading">
+<h2 id="quick-heading">What do you need today?</h2>
+<div class="iw-actions">
+<a href="http://localhost:5173/login">
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text">
+<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z">
+</path>
+<path d="M14 2v4a2 2 0 0 0 2 2h4">
+</path>
+<path d="M10 9H8">
+</path>
+<path d="M16 13H8">
+</path>
+<path d="M16 17H8">
+</path>
+</svg>
+<h3>Manage water bills</h3>
+<p>View invoices, balances, and payments.</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right">
+<path d="M5 12h14">
+</path>
+<path d="m12 5 7 7-7 7">
+</path>
+</svg>
+</a>
+<a href="http://localhost:5173/apply">
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pipette">
+<path d="m2 22 1-1h3l9-9">
+</path>
+<path d="M3 21v-3l9-9">
+</path>
+<path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z">
+</path>
+</svg>
+<h3>Apply for water service</h3>
+<p>Request a new water connection.</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right">
+<path d="M5 12h14">
+</path>
+<path d="m12 5 7 7-7 7">
+</path>
+</svg>
+</a>
+<a href="http://localhost:5173/concerns">
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-messages-square">
+<path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z">
+</path>
+<path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1">
+</path>
+</svg>
+<h3>Submit a concern</h3>
+<p>Ask a question or report a problem.</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right">
+<path d="M5 12h14">
+</path>
+<path d="m12 5 7 7-7 7">
+</path>
+</svg>
+</a>
+<a href="http://localhost:5173/track">
+<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
+<circle cx="11" cy="11" r="8">
+</circle>
+<path d="m21 21-4.3-4.3">
+</path>
+</svg>
+<h3>Track a request</h3>
+<p>Check your application or concern.</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right">
+<path d="M5 12h14">
+</path>
+<path d="m12 5 7 7-7 7">
+</path>
+</svg>
+</a>
+</div>
+</section>
+<section class="iw-connection">
+<h2>Getting a new connection</h2>
+<ol>
+<li>
+<h3>Apply for service</h3>
+<p>Send your property and contact details online or through the office.</p>
+</li>
+<li>
+<h3>Site inspection</h3>
+<p>The team checks the proposed connection and prepares an estimate.</p>
+</li>
+<li>
+<h3>Pay and connect</h3>
+<p>Accept the agreement and settle the charges. After installation, use your issued CAN to access billing.</p>
+</li>
+</ol>
+</section>
+<section class="iw-split" id="about">
+<h2>About us</h2>
+<p>Isabel Waters handles water connections, meter readings, billing, and service requests. You can manage your account here or work with the office in person, by phone, or by email.</p>
+</section>
+<section class="iw-split" id="faqs">
+<h2>Frequently asked questions</h2>
+<div class="iw-faqs">
+<details>
+<summary>How do I view my water bill?<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</summary>
+<p>Log in, open Billing accounts, and enter your Contract Account Number (CAN). Select that account to see its invoices, balance, and posted payments.</p>
+</details>
+<details>
+<summary>Can two people link the same CAN?<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</summary>
+<p>Yes. Each person uses their own login and can link the same CAN to view or pay its bills.</p>
+</details>
+<details>
+<summary>How do I apply for a new connection?<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</summary>
+<p>Apply online, visit the office, call, or email. Keep your application reference and tracking code to check progress and submit requested documents.</p>
+</details>
+<details>
+<summary>Do I need to log in to report a leak?<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down">
+<path d="m6 9 6 6 6-6">
+</path>
+</svg>
+</summary>
+<p>No. Open Submit a concern and include the location or nearest landmark. You can send the report without a CAN.</p>
+</details>
+</div>
+</section>
+<section class="iw-contact" id="contact" aria-labelledby="contact-heading">
+<div>
+<h2 id="contact-heading">Contact us</h2>
+<p>Ask about a bill, follow up on an application, or report a service issue.</p>
+</div>
+<a class="button" href="http://localhost:5173/concerns">Send an inquiry <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right">
+<path d="M5 12h14">
+</path>
+<path d="m12 5 7 7-7 7">
+</path>
+</svg>
+</a>
+</section>
+</div>
+</main>
+<footer class="iw-footer">
+<div>
+<a class="service-brand" href="#top">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-droplet">
+<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z">
+</path>
+</svg> Isabel Waters</a>
+<nav aria-label="Footer">
+<a href="#about">About us</a>
+<a href="#faqs">FAQs</a>
+<a href="#contact">Contact us</a>
+</nav>
+</div>
+</footer>
+</div>
+</body></html>

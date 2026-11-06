@@ -1,14 +1,17 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useAuth } from './context/AuthContext.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
-import RoleRoute from './components/RoleRoute.jsx'
+import CustomerLayout from './pages/customer/CustomerLayout.jsx'
+import Accounts from './pages/customer/Accounts.jsx'
+import Pay from './pages/customer/Pay.jsx'
+import { RequestForm, TrackRequest } from './pages/public/Requests.jsx'
 import RoleRedirect from './components/RoleRedirect.jsx'
-import Sidebar from './components/Sidebar.jsx'
 import AdminLayout from './components/AdminLayout.jsx'
 import CashierLayout from './components/CashierLayout.jsx'
 import { Loading } from './components/UI.jsx'
-import Landing from './pages/public/Landing.jsx'
+import Landing, { WaysToPay } from './pages/public/Landing.jsx'
 import Login from './pages/public/Login.jsx'
+import { SocialReturn } from './pages/public/SocialSignIn.jsx'
 import Register from './pages/public/Register.jsx'
 import ResetPassword from './pages/public/ResetPassword.jsx'
 import PortalLogin from './pages/admin/PortalLogin.jsx'
@@ -19,6 +22,7 @@ import Customers from './pages/admin/Customers.jsx'
 import CashierBillPrint from './pages/admin/BillPrint.jsx'
 import Receipt from './pages/admin/Receipt.jsx'
 import AdminDashboard from './pages/admin/Monitoring.jsx'
+import Requests from './pages/admin/Requests.jsx'
 import CustomerDashboard from './pages/customer/Dashboard.jsx'
 import MyBills from './pages/customer/MyBills.jsx'
 import PaymentHistory from './pages/customer/PaymentHistory.jsx'
@@ -35,7 +39,13 @@ export function GuestRoute({ children }) {
 export default function App() {
   return <Routes>
     <Route path="/" element={<Landing />} />
+    <Route path="/pay" element={<WaysToPay />} />
+    <Route path="/reconnect" element={<RequestForm key="reconnect" connectionChange />} />
+    <Route path="/apply" element={<RequestForm key="application" application />} />
+    <Route path="/concerns" element={<RequestForm key="concern" />} />
+    <Route path="/track" element={<TrackRequest />} />
     <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
+    <Route path="/auth/return" element={<SocialReturn />} />
     <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
     <Route path="/reset-password" element={<ResetPassword />} />
     <Route path="/portal" element={<GuestRoute><PortalLogin /></GuestRoute>} />
@@ -50,17 +60,19 @@ export default function App() {
       <Route path="billing" element={<Billing />} />
       <Route path="collection" element={<Collection />} />
       <Route path="customers" element={<Customers />} />
+      <Route path="requests" element={<Requests />} />
       <Route path="bills/:id/print" element={<CashierBillPrint />} />
       <Route path="receipts/:id" element={<Receipt />} />
     </Route></Route>
-    <Route element={<ProtectedRoute allowedRoles={['customer']} />}><Route element={<RoleRoute role="customer" />}><Route path="/customer" element={<Sidebar area="customer" />}>
+    <Route element={<ProtectedRoute allowedRoles={['customer']} />}><Route path="/customer" element={<CustomerLayout />}>
+      <Route path="accounts" element={<Accounts />} /><Route path="pay" element={<Pay />} />
       <Route index element={<Navigate replace to="dashboard" />} />
       <Route path="dashboard" element={<CustomerDashboard />} />
       <Route path="bills" element={<MyBills />} />
       <Route path="payments" element={<PaymentHistory />} />
       <Route path="profile" element={<Profile />} />
       <Route path="bills/:id/print" element={<CustomerBillPrint />} />
-    </Route></Route></Route>
+    </Route></Route>
     <Route path="*" element={<RoleRedirect />} />
   </Routes>
 }

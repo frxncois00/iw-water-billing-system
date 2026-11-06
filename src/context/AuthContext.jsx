@@ -6,7 +6,6 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null)
   const [profile, setProfile] = useState(null)
-  const [customer, setCustomer] = useState(null)
   const [loading, setLoading] = useState(true)
   const [identityError, setIdentityError] = useState('')
   const [guestFlow, setGuestFlow] = useState(false)
@@ -17,7 +16,7 @@ export function AuthProvider({ children }) {
     if (!currentSession?.user) {
       setSession(null)
       setProfile(null)
-      setCustomer(null)
+
       setIdentityError('')
       setLoading(false)
       return
@@ -28,20 +27,15 @@ export function AuthProvider({ children }) {
       const { data: nextProfile, error } = await supabase.from('profiles').select('*').eq('id', currentSession.user.id).single()
       if (error) throw error
       if (!['admin', 'cashier', 'customer'].includes(nextProfile?.role)) throw new Error('Your account has no assigned role. Contact the administrator.')
-      const { data: nextCustomer, error: customerError } = nextProfile.role === 'customer'
-        ? await supabase.from('customers').select('*').eq('id', currentSession.user.id).maybeSingle()
-        : { data: null, error: null }
-      if (customerError) throw customerError
       if (id === generation.current) {
         setProfile(nextProfile)
-        setCustomer(nextCustomer)
         setIdentityError('')
       }
     } catch (error) {
       if (id === generation.current) {
         console.error('Could not load account:', error)
         setProfile(null)
-        setCustomer(null)
+
         setIdentityError(error.message || 'Could not load your account.')
       }
     } finally {
@@ -84,7 +78,7 @@ export function AuthProvider({ children }) {
     return nextProfile.role
   }, [loadIdentity])
 
-  return <AuthContext.Provider value={{ session, user: session?.user, profile, role: profile?.role, customer, loading, identityError, guestFlow, setGuestFlow, refreshIdentity, signIn, signOut }}>
+  return <AuthContext.Provider value={{ session, user: session?.user, profile, role: profile?.role, loading, identityError, guestFlow, setGuestFlow, refreshIdentity, signIn, signOut }}>
     {children}
   </AuthContext.Provider>
 }

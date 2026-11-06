@@ -10,6 +10,7 @@ const cashierLinks = [
   { to: '/cashier/billing', label: 'Billing', icon: FileText },
   { to: '/cashier/collection', label: 'Collection', icon: Wallet },
   { to: '/cashier/customers', label: 'Customers', icon: Users },
+  { to: '/cashier/requests', label: 'Customer requests', icon: FileText },
 ]
 const adminLinks = [{ to: '/admin', label: 'Monitoring', icon: BarChart3 }]
 const customerLinks = [

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="only light">
+<title>Isabel Waters | Customer Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f7f6;--surf:#fff;--ink:#0d2a33;--mut:#4b6670;--line:#d4e1e2;--deep:#0b3a46;--deep2:#082c36;--aqua:#2bb6c4;--aqua-d:#0e7f8c;--amber:#b4630d;--ok:#12775a;--on-deep:#e9f6f6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);font-family:Figtree,Arial,sans-serif;color:var(--ink);background:var(--bg);color-scheme:light}
+
+
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);min-width:320px}
+a{color:inherit;text-decoration:none}h1,h2,h3{font-family:"Bricolage Grotesque",Figtree,sans-serif;letter-spacing:-.03em;margin:0}
+p{line-height:1.6;margin:0}:focus-visible{outline:3px solid var(--aqua);outline-offset:3px}
+.w{width:min(1120px,100% - 40px);margin:auto}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surf);border-bottom:1px solid var(--line)}
+header .w{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;flex-wrap:wrap}
+.brand{font:800 20px "Bricolage Grotesque",sans-serif;display:flex;gap:9px;align-items:center}
+.brand i{width:22px;height:22px;background:var(--aqua);border-radius:50% 50% 50% 50%/62% 62% 38% 38%;display:inline-block}
+nav{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+nav a{min-height:44px;padding:0 12px;display:inline-flex;align-items:center;font-weight:500;color:var(--mut);border-radius:8px}
+nav a:hover,nav a.on{color:var(--ink);background:var(--bg)}
+nav a.on{font-weight:700}
+.btn{min-height:46px;padding:0 20px;border-radius:10px;border:1.5px solid var(--deep);background:var(--deep);color:#fff;font:700 15px Figtree,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:transform .15s,background .2s}
+.btn:hover{transform:translateY(-1px);background:var(--deep2)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}.btn.ghost:hover{background:var(--bg)}
+.btn.aq{background:var(--aqua);border-color:var(--aqua);color:#04262d}
+nav a.btn{color:#fff;padding:0 18px;min-height:42px;margin-left:6px}nav a.btn:hover{background:var(--deep2)}
+.hero{background:var(--deep);color:var(--on-deep);position:relative;overflow:hidden}
+.hero .w{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;padding:clamp(40px,7vw,88px) 0;align-items:center;position:relative;z-index:1}
+.hero h1{font-size:clamp(40px,6vw,76px);line-height:1;font-weight:800}
+.hero p{margin-top:18px;max-width:46ch;color:#bcd9dc;font-size:18px}
+.look{background:var(--surf);color:var(--ink);border-radius:18px;padding:26px;box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.look h2{font-size:22px}.look p{color:var(--mut);font-size:14.5px;margin:6px 0 16px}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+input,select,textarea{width:100%;min-height:46px;padding:10px 13px;border:1.5px solid var(--line);border-radius:10px;background:var(--surf);color:var(--ink);font:500 16px Figtree,sans-serif}
+textarea{min-height:120px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:var(--aqua-d);outline:none;box-shadow:0 0 0 3px rgba(43,182,196,.3)}
+.hint{font-size:13px;color:var(--mut);margin-top:6px}
+.ripples{position:absolute;right:-120px;bottom:-160px;width:640px;height:640px;pointer-events:none}
+.ripples span{position:absolute;inset:0;border:1.5px solid rgba(79,208,220,.35);border-radius:50%;animation:rp 7s ease-out infinite}
+.ripples span:nth-child(2){animation-delay:2.3s}.ripples span:nth-child(3){animation-delay:4.6s}
+@keyframes rp{from{transform:scale(.2);opacity:1}to{transform:scale(1);opacity:0}}
+.status{display:flex;gap:10px;align-items:center;margin-top:26px;padding:12px 16px;border:1px solid rgba(255,255,255,.18);border-radius:12px;max-width:520px;font-size:15px}
+.dot{width:10px;height:10px;border-radius:50%;background:#52d3a8;flex:none}
+section{padding:clamp(36px,6vw,68px) 0}
+.sec h2{font-size:clamp(26px,3.4vw,38px);margin-bottom:8px}.sec>.w>p{color:var(--mut);max-width:60ch}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:28px}
+.tile{padding:22px;background:var(--surf);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;gap:10px;min-height:190px;transition:border-color .2s}
+.tile:hover{border-color:var(--aqua-d)}.tile h3{font-size:19px}.tile p{color:var(--mut);font-size:14.5px;flex:1}
+.tile b{font-size:14px;color:var(--aqua-d)}
+.tile.lead{background:var(--deep);color:var(--on-deep);border-color:var(--deep)}.tile.lead p{color:#bcd9dc}.tile.lead b{color:var(--aqua)}
+.band{background:var(--surf);border-block:1px solid var(--line)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:28px;counter-reset:s}
+.steps div{counter-increment:s;border-top:3px solid var(--aqua);padding-top:14px}
+.steps div:before{content:counter(s);font:800 14px "Bricolage Grotesque";color:var(--aqua-d)}
+.steps h3{font-size:19px;margin:4px 0 6px}.steps p{color:var(--mut);font-size:15px}
+.cols{display:grid;grid-template-columns:1fr 1.5fr;gap:48px}
+details{border-bottom:1px solid var(--line)}summary{list-style:none;cursor:pointer;min-height:54px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-weight:700}
+summary::-webkit-details-marker{display:none}summary:after{content:"+";font-size:22px;color:var(--aqua-d);transition:transform .2s}details[open] summary:after{transform:rotate(45deg)}
+details p{padding:0 30px 18px 0;color:var(--mut)}
+.help{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.help div{padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--surf)}.help b{display:block;margin-bottom:4px}.help span{color:var(--mut);font-size:14.5px}
+.help .urgent{border-color:var(--amber)}.help .urgent b{color:var(--amber)}
+.page{padding:clamp(28px,5vw,56px) 0 72px}
+.page h1{font-size:clamp(32px,4.5vw,52px);font-weight:800}.page>.w>p.lede{color:var(--mut);margin:10px 0 28px;max-width:58ch;font-size:17px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:clamp(20px,3vw,32px);max-width:680px}
+.two{display:grid;grid-template-columns:minmax(0,680px) 1fr;gap:32px;align-items:start}
+.aside{padding:22px;border-left:3px solid var(--aqua);color:var(--mut)}.aside b{color:var(--ink);display:block;margin-bottom:6px}.aside p{margin-bottom:12px;font-size:15px}
+.stepper{display:flex;gap:8px;margin-bottom:22px}.stepper span{flex:1;padding:8px 0;border-top:4px solid var(--line);font-size:13px;font-weight:700;color:var(--mut)}.stepper .on{border-color:var(--aqua);color:var(--ink)}.stepper .done{border-color:var(--ok)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{min-height:44px;padding:0 16px;border:1.5px solid var(--line);border-radius:999px;background:var(--surf);color:var(--ink);font:600 14.5px Figtree;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--deep);border-color:var(--deep);color:#fff}
+.row{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.ok{border:1.5px solid var(--ok);border-radius:14px;padding:22px;background:var(--surf)}.ok h2{font-size:24px;color:var(--ok)}.ref{font:700 26px "Bricolage Grotesque";letter-spacing:.02em;margin:10px 0}
+.err{color:#b53846;font-size:14px;margin-top:8px;font-weight:600}
+
+.tl{list-style:none;margin:22px 0 0;padding:0}.tl li{position:relative;padding:0 0 22px 30px;border-left:2px solid var(--line);margin-left:7px}
+.tl li:before{content:"";position:absolute;left:-8px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--surf);border:2px solid var(--line)}
+.tl li.d{border-color:var(--ok)}.tl li.d:before{background:var(--ok);border-color:var(--ok)}.tl li.c:before{border-color:var(--aqua);background:var(--aqua);box-shadow:0 0 0 5px rgba(43,182,196,.25)}
+.tl small{display:block;color:var(--mut)}
+.tabs{display:flex;border:1.5px solid var(--line);border-radius:10px;padding:3px;margin-bottom:6px}.tabs button{flex:1;min-height:42px;border:0;border-radius:7px;background:none;color:var(--mut);font:700 15px Figtree;cursor:pointer}.tabs button[aria-selected=true]{background:var(--deep);color:#fff}
+footer{background:var(--deep2);color:#bcd9dc;padding:36px 0}footer .w{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}footer .brand{color:#fff}footer a{display:inline-block;min-height:32px;margin-right:18px}footer p{font-size:14px;margin-top:8px}
+.hide{display:none!important}
+@media(max-width:860px){.hero .w,.cols,.two{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}.steps,.help{grid-template-columns:1fr}.ripples{opacity:.5}}
+@media(max-width:520px){.tiles{grid-template-columns:1fr}nav a{padding:0 8px;font-size:14px}.brand{font-size:18px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+:root{--bg:#f5f8fa;--surf:white;--ink:#19354a;--mut:#4b6671;--line:#d5e1e4;--deep:#1b3c52;--deep2:#142f42;--aqua:#a4d4d3;--aqua-d:#246f77;color-scheme:only light}
+.hero{background:linear-gradient(110deg,#f2f7fa,#e2eff1);color:var(--ink);border-bottom:1px solid var(--line)}
+.hero p,.tile.lead p,footer,footer .brand{color:var(--mut)}
+.look{border:1px solid var(--line);box-shadow:0 12px 32px rgba(25,53,74,.07)}
+.status{background:var(--surf);border-color:var(--line)}.status .dot{background:var(--aqua-d)}
+.tile.lead{background:#e9f3f3;color:var(--ink);border-color:#b4d2d4}.tile.lead b{color:var(--aqua-d)}
+footer{background:#fff;border-top:1px solid var(--line)}footer .brand{color:var(--ink)}
+</style>
+</head>
+<body>
+<!-- Standalone design preview. Form submissions and balances are simulated. -->
+<header><div class="w">
+<a class="brand" href="#home"><i></i>Isabel Waters</a>
+<nav aria-label="Main">
+<a href="#apply" data-p="apply">New connection</a>
+<a href="#concerns" data-p="concerns">Report a concern</a>
+<a href="#track" data-p="track">Track request</a>
+<a class="btn" href="#login" data-p="login">Log in</a>
+</nav></div></header>
+
+<main id="home" data-page>
+<div class="hero"><div class="ripples" aria-hidden="true"><span></span><span></span><span></span></div>
+<div class="w"><div>
+<h1>Pay your bill. Get connected. Report a leak.</h1>
+<p>Manage your water account or reach the service office from one place.</p>
+<div class="status" role="status"><span class="dot"></span><span>Use your CAN when asking about a bill.</span></div>
+</div>
+<form class="look" id="lookup"><h2>Check a bill</h2><p>Preview a sample balance here. Use the live portal to view or pay a bill.</p>
+<label for="can">Contract Account Number (CAN)</label><input id="can" inputmode="numeric" placeholder="e.g. 1042 5567 31" autocomplete="off">
+<div class="hint">Find the CAN at the top of your printed bill.</div>
+<div id="lk"></div>
+<div class="row"><button class="btn aq" type="submit">Check balance</button><a class="btn ghost" href="#login">Log in</a></div></form>
+</div></div>
+
+<section class="sec"><div class="w"><h2>What do you need today?</h2><p>Choose a service to get started.</p>
+<div class="tiles">
+<a class="tile lead" href="#login"><h3>Pay or view bills</h3><p>Invoices, balances, and payment history for every account you link.</p><b>Log in to continue</b></a>
+<a class="tile" href="#apply"><h3>Apply for a connection</h3><p>New home or business. Submit details and documents online.</p><b>Start application</b></a>
+<a class="tile" href="#concerns"><h3>Report a concern</h3><p>Leak, low pressure, billing question. No account required.</p><b>Send a report</b></a>
+<a class="tile" href="#track"><h3>Track a request</h3><p>Enter your tracking code to see where it stands.</p><b>Check status</b></a>
+</div></div></section>
+
+<section class="band"><div class="w"><div class="sec"><h2>Getting a new connection</h2><p style="color:var(--mut)">Three stages from application to flowing water.</p></div>
+<div class="steps"><div><h3>Apply online</h3><p>Fill in the property and contact details, and attach a valid ID and proof of ownership.</p></div>
+<div><h3>Site inspection</h3><p>Our team visits to confirm the meter location and pipe route. We will message you the date.</p></div>
+<div><h3>Pay and connect</h3><p>Settle the connection fee, then the meter is installed and your account goes live.</p></div></div></div></section>
+
+<section class="sec" id="faqs"><div class="w cols"><div><h2>Common questions</h2><p>Can't find yours? <a href="#concerns" style="text-decoration:underline;font-weight:700">Send us a message.</a></p></div>
+<div>
+<details><summary>How do I view my water bill?</summary><p>Log in, open Billing accounts, and enter your Contract Account Number (CAN). Select the account to see invoices, balance, and posted payments.</p></details>
+<details><summary>Can two people link the same CAN?</summary><p>Yes. Each person uses their own login and can link the same CAN to view or pay its bills.</p></details>
+<details><summary>How do I apply for a new connection?</summary><p>Apply online, visit the office, call, or email. Keep your application reference and tracking code to check progress and submit requested documents.</p></details>
+<details><summary>Do I need to log in to report a leak?</summary><p>No. Open Report a concern and include the location or nearest landmark. You can send the report without a CAN.</p></details>
+</div></div></section>
+
+<section class="sec" id="contact"><div class="w"><h2>Reach the office</h2><p>Prefer a person? We handle connections, meter readings, billing, and service requests in person, by phone, or by email.</p>
+<div class="help"><div class="urgent"><b>Burst pipe or no water</b><span>Report it online now. Add a landmark so crews find it fast.</span></div><div><b>Visit</b><span>Visit the customer service desk for in-person assistance.</span></div><div><b>Call or email</b><span>Hotline and email shown on your printed bill</span></div></div></div></section>
+</main>
+
+<main id="apply" data-page class="page hide"><div class="w"><h1>Apply for a new connection</h1><p class="lede">Three short steps. You can finish in one sitting and track progress afterwards.</p>
+<div class="two"><div class="card" id="apCard">
+<div class="stepper"><span class="on">1 Property</span><span>2 You</span><span>3 Documents</span></div>
+<div id="ap1"><label for="atype">Connection type</label><select id="atype"><option>Residential</option><option>Commercial</option><option>Institutional</option></select>
+<label for="addr">Property address</label><input id="addr" placeholder="Street, barangay, city"><label for="lm">Nearest landmark</label><input id="lm">
+<div class="err" id="e1"></div><div class="row"><button class="btn" data-go="2">Continue</button></div></div>
+<div id="ap2" class="hide"><label for="aname">Full name</label><input id="aname" autocomplete="name"><label for="aph">Mobile number</label><input id="aph" inputmode="tel" autocomplete="tel"><label for="aem">Email (optional)</label><input id="aem" type="email">
+<div class="err" id="e2"></div><div class="row"><button class="btn ghost" data-go="1">Back</button><button class="btn" data-go="3">Continue</button></div></div>
+<div id="ap3" class="hide"><label for="f1">Valid government ID</label><input id="f1" type="file"><label for="f2">Proof of ownership or lease</label><input id="f2" type="file"><div class="hint">You can also bring these to the office after submitting.</div>
+<div class="row"><button class="btn ghost" data-go="2">Back</button><button class="btn aq" id="apSend">Submit application</button></div></div>
+<div id="apDone" class="hide ok"><h2>Sample application received</h2><p>Your tracking code:</p><div class="ref" id="apRef"></div><p>Save it. This preview uses sample tracking codes.</p><div class="row"><a class="btn" href="#track">Track this request</a></div></div>
+</div>
+<aside class="aside"><b>Before you start</b><p>Have your property address, a valid ID, and proof of ownership or lease ready.</p><b>Fees</b><p>The connection fee is shown after inspection. Nothing is charged to apply.</p></aside></div></div></main>
+
+<main id="concerns" data-page class="page hide"><div class="w"><h1>Report a concern</h1><p class="lede">Leak, low pressure, billing question, or anything else. You don't need an account.</p>
+<div class="two"><div class="card" id="coCard"><label id="tl">What is it about?</label>
+<div class="chips" role="group" aria-labelledby="tl" id="chips"><button class="chip" aria-pressed="true">Leak</button><button class="chip" aria-pressed="false">No water</button><button class="chip" aria-pressed="false">Low pressure</button><button class="chip" aria-pressed="false">Billing</button><button class="chip" aria-pressed="false">Other</button></div>
+<label for="cloc">Location or nearest landmark</label><input id="cloc"><label for="cmsg">Details</label><textarea id="cmsg" placeholder="What did you see? Since when?"></textarea>
+<label for="cct">Phone or email, so we can update you</label><input id="cct">
+<div class="err" id="e3"></div><div class="row"><button class="btn aq" id="coSend">Send report</button></div></div>
+<div id="coDone" class="ok hide"><h2>Sample report received</h2><p>Reference code:</p><div class="ref" id="coRef"></div><p>Use it on the Track request page to see updates.</p><div class="row"><a class="btn" href="#track">Track this report</a></div></div>
+<aside class="aside"><b>Burst main or flooding?</b><p>Pick Leak and add the exact spot. Reports marked as leaks go to the top of the queue.</p></aside></div></div></main>
+
+<main id="track" data-page class="page hide"><div class="w"><h1>Track a request</h1><p class="lede">Enter the code you received when you applied or sent a report.</p>
+<div class="card"><form id="trk"><label for="tc">Tracking code</label><input id="tc" placeholder="e.g. IW-48213" autocomplete="off"><div class="err" id="e4"></div><div class="row"><button class="btn" type="submit">Check status</button></div></form><div id="tres"></div></div></div></main>
+
+<main id="login" data-page class="page hide"><div class="w"><h1 id="lh">Log in</h1><p class="lede">See bills, pay online, and link more than one account.</p>
+<div class="card" style="max-width:460px"><div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-t="in">Log in</button><button role="tab" aria-selected="false" data-t="up">Create a login</button></div>
+<form id="lf"><div id="nm" class="hide"><label for="ln">Full name</label><input id="ln" autocomplete="name"></div>
+<label for="le">Email</label><input id="le" type="email" autocomplete="email"><label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password">
+<div id="cn" class="hide"><label for="lc">CAN (optional)</label><input id="lc" inputmode="numeric"><div class="hint">Link your account now, or later from Billing.</div></div>
+<div class="err" id="e5"></div><div class="row"><button class="btn" type="submit" id="lbtn">Log in</button></div></form><div id="ldone" class="ok hide" style="margin-top:18px"><h2>Demo only</h2><p>This design preview doesn't sign anyone in.</p></div></div></div></main>
+
+<footer><div class="w"><div><span class="brand"><i></i>Isabel Waters</span><p>Water connections, meter readings, billing, and service requests.</p></div>
+<nav aria-label="Footer"><a href="#apply">New connection</a><a href="#concerns">Report a concern</a><a href="#track">Track request</a><a href="#login">Log in</a></nav></div></footer>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const pages=['home','apply','concerns','track','login'];
+function route(){const h=location.hash.slice(1),p=pages.includes(h)?h:(['faqs','contact'].includes(h)?'home':'home');
+$$('[data-page]').forEach(m=>m.classList.toggle('hide',m.id!==p));
+$$('nav a[data-p]').forEach(a=>a.classList.toggle('on',a.dataset.p===p&&!a.classList.contains('btn')));
+if(['faqs','contact'].includes(h))setTimeout(()=>document.getElementById(h).scrollIntoView(),0);else window.scrollTo(0,0)}
+addEventListener('hashchange',route);route();
+const code=()=>'IW-'+Math.floor(10000+Math.random()*89999);
+$('#lookup').onsubmit=e=>{e.preventDefault();const v=$('#can').value.replace(/\D/g,'');
+$('#lk').innerHTML=v.length<8?'<div class="err">Enter the 8 to 12 digit CAN on your bill.</div>':'<div class="hint" style="color:var(--ok);font-weight:700;font-size:15px;margin-top:12px">Account found. Balance due: ₱0.00 (sample)</div>'};
+function stp(n){[1,2,3].forEach(i=>$('#ap'+i).classList.toggle('hide',i!==n));$$('.stepper span').forEach((s,i)=>s.className=i+1===n?'on':i+1<n?'done':'')}
+$$('[data-go]').forEach(b=>b.onclick=()=>{const n=+b.dataset.go;
+if(n===2&&!$('#addr').value.trim()){$('#e1').textContent='Enter the property address.';return}
+if(n===3&&(!$('#aname').value.trim()||!$('#aph').value.trim())){$('#e2').textContent='Enter your name and mobile number.';return}
+$('#e1').textContent=$('#e2').textContent='';stp(n)});
+$('#apSend').onclick=()=>{$('#apRef').textContent=code();['ap3'].forEach(i=>$('#'+i).classList.add('hide'));$('.stepper').classList.add('hide');$('#apDone').classList.remove('hide')};
+$$('#chips .chip').forEach(c=>c.onclick=()=>$$('#chips .chip').forEach(x=>x.setAttribute('aria-pressed',x===c)));
+$('#coSend').onclick=()=>{if(!$('#cloc').value.trim()||!$('#cmsg').value.trim()){$('#e3').textContent='Add a location and a few details so we can act on it.';return}
+$('#coRef').textContent=code();$('#coCard').classList.add('hide');$('#coDone').classList.remove('hide')};
+$('#trk').onsubmit=e=>{e.preventDefault();const v=$('#tc').value.trim().toUpperCase();
+if(!/^IW-\d{5}$/.test(v)){$('#e4').textContent='Codes look like IW-48213.';$('#tres').innerHTML='';return}
+$('#e4').textContent='';$('#tres').innerHTML='<h2 style="margin-top:28px;font-size:22px">'+v+'</h2><ul class="tl"><li class="d"><b>Received</b><small>We have your request</small></li><li class="d"><b>Reviewed</b><small>Assigned to the field team</small></li><li class="c"><b>Site inspection scheduled</b><small>You will get an SMS with the date</small></li><li><b>Completed</b><small>Pending</small></li></ul><p class="hint">Sample status for this preview.</p>'};
+$$('.tabs button').forEach(b=>b.onclick=()=>{const up=b.dataset.t==='up';$$('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+$('#nm').classList.toggle('hide',!up);$('#cn').classList.toggle('hide',!up);$('#lbtn').textContent=up?'Create login':'Log in';$('#lh').textContent=up?'Create a login':'Log in'});
+$('#lf').onsubmit=e=>{e.preventDefault();if(!$('#le').value.includes('@')||$('#lp').value.length<6){$('#e5').textContent='Enter a valid email and a password of at least 6 characters.';return}
+$('#e5').textContent='';$('#ldone').classList.remove('hide')};
+</script>
+</body>
+</html>

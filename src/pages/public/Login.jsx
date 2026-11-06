@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Droplets } from 'lucide-react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import AuthScreen from './AuthScreen.jsx'
+import { SocialSignIn } from './SocialSignIn.jsx'
 import { supabase } from '../../lib/supabaseClient.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { Notice } from '../../components/UI.jsx'
@@ -8,8 +9,12 @@ import { errorMessage } from '../../lib/format.js'
 
 export default function Login() {
   const navigate = useNavigate()
+  const { state } = useLocation()
   const { refreshIdentity, setGuestFlow } = useAuth()
   useEffect(() => { setGuestFlow(true); return () => setGuestFlow(false) }, [setGuestFlow])
+  const [passwordStep,setPasswordStep] = useState(false)
+  const [more,setMore] = useState(false)
+  const [help,setHelp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
@@ -18,7 +23,9 @@ export default function Login() {
   const [error, setError] = useState('')
 
   const submit = async (event) => {
-    event.preventDefault(); setBusy(true); setError(''); setMessage('')
+    event.preventDefault(); setError(''); setMessage('')
+    if (!passwordStep) { setPasswordStep(true); return }
+    setBusy(true)
     try {
       const { data, error: signInError } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
       if (signInError) throw signInError
@@ -30,20 +37,42 @@ export default function Login() {
         return
       }
       await refreshIdentity()
-      navigate('/customer/dashboard', { replace: true })
+      navigate(state?.from?.startsWith('/customer/') ? state.from : '/customer/dashboard', { replace: true })
     } catch (err) { setError(errorMessage(err)) }
     finally { setBusy(false) }
   }
 
-  const reset = async () => {
+  const sendEmail = async recovery => {
     setError(''); setMessage('')
-    if (!email.trim()) { setError('Enter your email address first, then request a reset link.'); return }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError('Enter a valid email address first.'); return }
     setResetBusy(true)
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/reset-password` })
-    if (resetError) setError(errorMessage(resetError))
-    else setMessage('If that email is registered, a password reset link is on its way.')
-    setResetBusy(false)
+    try {
+      const result = recovery
+        ? await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: window.location.origin+'/reset-password' })
+        : await supabase.auth.signInWithOtp({ email:email.trim(),options:{shouldCreateUser:false,emailRedirectTo:window.location.origin+'/auth/return'} })
+      if (result.error) throw result.error
+      setMessage('If that address is registered, check your email for the link.')
+    } catch(err) { setError(errorMessage(err)) }
+    finally { setResetBusy(false) }
   }
 
-  return <div className="auth-page"><div className="auth-side"><Link className="site-logo light-logo" to="/"><span><Droplets size={25} /></span><strong>ISABEL WATERS</strong></Link><div><p className="eyebrow">YOUR WATER ACCOUNT</p><h1>Welcome back<br />to a clearer view.</h1><p>One secure place for your monthly bills, balances, and payment record.</p></div><span>Billing & Collection</span></div><main className="auth-main"><Link to="/" className="back-link"><ArrowLeft size={17} /> Back to home</Link><div className="auth-card"><p className="eyebrow">CUSTOMER ACCESS</p><h2>Log in to your account</h2><p className="muted">Enter the email and password you registered with.</p><Notice type="error">{error}</Notice><Notice type="success">{message}</Notice><form onSubmit={submit} className="form-stack"><label>Email address<input type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" /></label><label>Password<input type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Enter your password" /></label><button className="forgot-link" type="button" onClick={reset} disabled={resetBusy}>{resetBusy ? 'Sending…' : 'Forgot password?'}</button><button className="button button-full" disabled={busy}>{busy ? 'Signing in…' : 'Log in'} <ArrowRight size={17} /></button></form><p className="auth-switch">New to Isabel Waters? <Link to="/register">Create an account</Link></p></div></main></div>
+  return <AuthScreen>
+    <Notice type="error">{error}</Notice><Notice type="success">{message}</Notice>
+    <form onSubmit={submit} className="form-stack">
+      <label>Email address<input type="email" autoComplete="email" required readOnly={passwordStep}
+        value={email} onChange={event=>setEmail(event.target.value)}/></label>
+      {passwordStep && <>
+        <button type="button" className="iw-auth-link" onClick={()=>{setPasswordStep(false);setPassword('');setError('')}}>Change email</button>
+        <label>Password<input autoFocus type="password" autoComplete="current-password" required
+          value={password} onChange={event=>setPassword(event.target.value)}/></label>
+      </>}
+      <div className="iw-auth-submit"><button className="button" disabled={busy}>{busy?'Signing in…':passwordStep?'Sign in':'Continue'}</button></div>
+    </form>
+    {!passwordStep && <SocialSignIn from={state?.from}/>}
+    <div className="iw-auth-more"><button type="button" className="iw-auth-link" aria-expanded={more} onClick={()=>setMore(!more)}>More sign-in options</button>
+      {more && <button type="button" className="iw-provider-extra" disabled={resetBusy} onClick={()=>sendEmail(false)}>Email me a sign-in link</button>}
+    </div>
+    <button type="button" className="iw-auth-link" aria-expanded={help} onClick={()=>setHelp(!help)}>Get help signing in</button>
+    {help && <div className="iw-help-box"><p>Enter your registered email address above to reset your password.</p><button type="button" className="iw-auth-link" disabled={resetBusy} onClick={()=>sendEmail(true)}>Send password reset link</button></div>}
+  </AuthScreen>
 }
